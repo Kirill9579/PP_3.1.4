@@ -20,14 +20,10 @@ import java.util.List;
 public class UsersController {
 
     private final UserService userService;
-    private PasswordEncoder passwordEncoder;
-//    private final Authentication auth;
-
     @Autowired
-    public UsersController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UsersController(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-//        this.auth = SecurityContextHolder.getContext().getAuthentication();
+
     }
 
     @GetMapping("/registration")
@@ -38,7 +34,7 @@ public class UsersController {
 
     @PostMapping("/new")
     public String createUser(@ModelAttribute("user") User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.createUser(user);
         return "redirect:/";
     }
@@ -62,7 +58,7 @@ public class UsersController {
     }
     @PostMapping("/admin/{id}")
     public String updateUserByAdmin(@ModelAttribute("user") User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.updateUser(user);
         return "redirect:/admin/";
     }
@@ -79,7 +75,7 @@ public class UsersController {
 
     @PostMapping("/admin/new")
     public String createUserByAdmin(@ModelAttribute("user") User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.createUser(user);
         return "redirect:/admin/";
     }
