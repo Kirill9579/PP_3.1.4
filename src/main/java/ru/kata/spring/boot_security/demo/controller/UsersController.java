@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
@@ -18,23 +19,22 @@ import java.util.List;
 public class UsersController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
+    private RoleRepository roleRepository;
 
     @Autowired
-    public UsersController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UsersController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping("/registration")
-    public String registration(ModelMap model) {
+    public String registrationNewUser(ModelMap model) {
         model.addAttribute("users", new User());
         return "crud/registration";
     }
 
     @PostMapping("/new")
-    public String createUser(@ModelAttribute("user") User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public String saveNewUser(@ModelAttribute("user") User user) {
         userService.addUser(user);
         return "redirect:/";
     }
@@ -45,5 +45,4 @@ public class UsersController {
         model.addAttribute("user", user);
         return "user";
     }
-
 }
