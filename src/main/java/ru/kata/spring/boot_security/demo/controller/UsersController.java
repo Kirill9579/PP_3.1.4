@@ -39,7 +39,7 @@ public class UsersController {
         return "redirect:/";
     }
 
-    @GetMapping("/user/")
+    @GetMapping("/user")
     public String showOneUser(Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
         model.addAttribute("user", user);
