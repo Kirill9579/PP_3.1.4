@@ -19,12 +19,10 @@ import java.util.List;
 public class UsersController {
 
     private final UserService userService;
-    private RoleRepository roleRepository;
 
     @Autowired
-    public UsersController(UserService userService, RoleRepository roleRepository) {
+    public UsersController(UserService userService) {
         this.userService = userService;
-        this.roleRepository = roleRepository;
     }
 
     @GetMapping("/registration")
