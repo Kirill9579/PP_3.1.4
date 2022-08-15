@@ -25,14 +25,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-    public void addRole(String name) {
-        Role role = new Role();
-        role.setName(name);
-        roles.add(role);
+    public User() {
     }
 
     @Override
