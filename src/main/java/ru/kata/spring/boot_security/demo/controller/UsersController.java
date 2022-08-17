@@ -25,18 +25,6 @@ public class UsersController {
         this.userService = userService;
     }
 
-    @GetMapping("/registration")
-    public String registrationNewUser(ModelMap model) {
-        model.addAttribute("users", new User());
-        return "crud/registration";
-    }
-
-    @PostMapping("/new")
-    public String saveNewUser(@ModelAttribute("user") User user) {
-        userService.addUser(user);
-        return "redirect:/";
-    }
-
     @GetMapping("/user")
     public String showOneUser(Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
