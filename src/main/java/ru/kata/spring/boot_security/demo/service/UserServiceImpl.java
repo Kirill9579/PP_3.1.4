@@ -6,18 +6,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -56,9 +51,14 @@ public class UserServiceImpl implements UserService {
     }
     @Transactional
     public void updateUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User userDB = getUserById(user.getId());
+        userDB.setFirstName(user.getFirstName());
+        userDB.setLastName(user.getLastName());
+        userDB.setAge(user.getAge());
+        userDB.setEmail(user.getEmail());
+        userDB.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        userRepository.save(user);
+        userRepository.save(userDB);
     }
 
 
