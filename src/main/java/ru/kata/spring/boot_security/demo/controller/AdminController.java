@@ -45,7 +45,7 @@ public class AdminController {
         userService.removeUserById(id);
         return "redirect:/admin/";
     }
-    @PostMapping("/admin/update/{id}")
+    @PostMapping("/admin/update/")
     public String updateUser(@ModelAttribute("newUser") User user) {
         userService.updateUser(user);
         return "redirect:/admin/";
