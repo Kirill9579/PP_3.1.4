@@ -27,7 +27,7 @@ public class UsersController {
 
     @GetMapping("/user/")
     public String showOneUser(Model model, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
+        User user = userService.findByEmail(principal.getName());
         model.addAttribute("user", user);
         return "bootstrap/temp2";
     }

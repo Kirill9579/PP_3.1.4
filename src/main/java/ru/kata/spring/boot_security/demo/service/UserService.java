@@ -9,7 +9,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    User findByUsername(String username);
+    User findByEmail(String username);
 
     void addUser(User user);
 

@@ -17,7 +17,6 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 public class AdminController {
@@ -47,7 +46,7 @@ public class AdminController {
         return "redirect:/admin/";
     }
     @PostMapping("/admin/update/{id}")
-    public String updateUser(@ModelAttribute("user") User user) {
+    public String updateUser(@ModelAttribute("newUser") User user) {
         userService.updateUser(user);
         return "redirect:/admin/";
     }
@@ -58,23 +57,26 @@ public class AdminController {
     }
     @GetMapping("/admin/new")
     public String createNewUser(ModelMap model) {
-        Set<Role> listRoles = new HashSet<>(roleRepository.findAll());
+
         model.addAttribute("user", new User());
-        model.addAttribute("listRoles", listRoles);
+//        model.addAttribute("listRoles", listRoles);
         return "crud/addUser";
     }
 
     @PostMapping("/admin/new")
     public String saveNewUser(@ModelAttribute("user") User user) {
-        userService.addUser(user);
+//        user.setRole(role);, @ModelAttribute Role role
+        userService.updateUser(user);
         return "redirect:/admin/";
     }
 
     @GetMapping("/admin/")
-    public String showOneUser(Model model, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
+    public String showOneUser(ModelMap model, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
         List<User> users = userService.getAllUsers();
-        model.addAttribute("user_service", userService);
+        Set<Role> listRoles = new HashSet<>(roleRepository.findAll());
+        model.addAttribute("listRoles", listRoles);
+        model.addAttribute("newUser", new User());
         model.addAttribute("users", users);
         model.addAttribute("one_user", user);
         return "bootstrap/temp";

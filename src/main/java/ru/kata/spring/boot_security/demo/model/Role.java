@@ -2,11 +2,9 @@ package ru.kata.spring.boot_security.demo.model;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.Transient;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -16,13 +14,14 @@ public class Role implements GrantedAuthority {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
    private String name;
-   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-   @JoinTable(name = "users_roles",
-           joinColumns = @JoinColumn(name = "role_id"),
-           inverseJoinColumns = @JoinColumn(name = "user_id"))
-   private List<User> users = new ArrayList<>();
+   @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
+   private Set<User> users = new HashSet<>();
 
    public Role() {
+   }
+
+   public Role(String name) {
+      this.name = name;
    }
 
    @Override
@@ -30,4 +29,16 @@ public class Role implements GrantedAuthority {
       return name;
    }
 
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Role)) return false;
+      Role role = (Role) o;
+      return Objects.equals(name, role.name);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(name);
+   }
 }

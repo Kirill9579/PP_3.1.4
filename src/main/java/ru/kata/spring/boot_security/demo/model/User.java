@@ -14,16 +14,29 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
+    private String firstName;
+    private String lastName;
+    private int age;
+//    private String username;
     private String password;
     private String email;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
+    }
+
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    public void setRoleToUser(Role role) {
+        roles.add(role);
     }
 
     @Override
