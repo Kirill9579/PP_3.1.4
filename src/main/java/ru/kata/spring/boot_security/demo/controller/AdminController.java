@@ -2,12 +2,8 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
@@ -23,49 +19,29 @@ public class AdminController {
 
     private final UserService userService;
     private final RoleRepository roleRepository;
+
     @Autowired
     public AdminController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
     }
 
-//    @GetMapping("/admin/")
-//    public String getAllUsers(ModelMap model) {
-//        List<User> users = userService.getAllUsers();
-//        model.addAttribute("users", users);
-//        return "crud/users";
-//    }
-    @GetMapping("/admin/{id}")
-    public String showOneUser(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "crud/oneUser";
-    }
-    @GetMapping("/admin/delete/{id}")
+
+
+    @DeleteMapping("/admin/delete/{id}")
     public String removeUserById(@PathVariable("id") Long id) {
         userService.removeUserById(id);
         return "redirect:/admin/";
     }
-    @PostMapping("/admin/update/")
-    public String updateUser(@ModelAttribute("newUser") User user) {
-        userService.updateUser(user);
-        return "redirect:/admin/";
-    }
-    @GetMapping("/admin/update/{id}")
-    public String editUser(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "crud/updateUser";
-    }
-    @GetMapping("/admin/new")
-    public String createNewUser(ModelMap model) {
 
-        model.addAttribute("user", new User());
-//        model.addAttribute("listRoles", listRoles);
-        return "crud/addUser";
+    @PatchMapping("/admin/update/{id}")
+    public String updateUser(@ModelAttribute("newUser") User user, @PathVariable("id") Long id) {
+        userService.updateUser(user, id);
+        return "redirect:/admin/";
     }
 
     @PostMapping("/admin/new")
     public String saveNewUser(@ModelAttribute("user") User user) {
-//        user.setRole(role);, @ModelAttribute Role role
         userService.addUser(user);
         return "redirect:/admin/";
     }
@@ -78,7 +54,7 @@ public class AdminController {
         model.addAttribute("listRoles", listRoles);
         model.addAttribute("newUser", new User());
         model.addAttribute("users", users);
-        model.addAttribute("one_user", user);
-        return "bootstrap/temp";
+        model.addAttribute("authUser", user);
+        return "bootstrap/AdminPanel";
     }
 }
