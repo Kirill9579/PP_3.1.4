@@ -14,7 +14,7 @@ public class Role implements GrantedAuthority {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
    private String name;
-   @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
+   @ManyToMany(mappedBy = "roles")
    private Set<User> users = new HashSet<>();
 
    public Role() {
@@ -32,6 +32,7 @@ public class Role implements GrantedAuthority {
       return name;
    }
 
+
    @Override
    public boolean equals(Object o) {
       if (this == o) return true;
@@ -43,5 +44,10 @@ public class Role implements GrantedAuthority {
    @Override
    public int hashCode() {
       return Objects.hash(name);
+   }
+
+   @Override
+   public String toString() {
+      return getNameRole();
    }
 }

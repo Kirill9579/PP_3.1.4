@@ -361,9 +361,7 @@
                                             <td th:text="${authUser.getLastName()}">last name</td>
                                             <td th:text="${authUser.getAge()}">age</td>
                                             <td th:text="${authUser.getEmail()}">email</td>
-                                            <td th:each="role : ${authUser.getRoles()}"
-                                                th:utext="${role.getNameRole()}">roles
-                                            </td>
+                                            <td th:text="${listRoles}">roles</td>
 
                                         </tr>
                                         </tbody>

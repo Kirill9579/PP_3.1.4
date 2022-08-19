@@ -26,6 +26,7 @@ public class InitUser {
         roleAdmin.setName("ROLE_ADMIN");
 
 
+
         User admin = new User();
         admin.setFirstName("bob");
         admin.setLastName("fury");
@@ -33,6 +34,7 @@ public class InitUser {
         admin.setPassword("admin");
         admin.setEmail("admin@mail.ru");
         admin.setRoleToUser(roleAdmin);
+        admin.setRoleToUser(roleUser);
         userService.addUser(admin);
 
         User user = new User();

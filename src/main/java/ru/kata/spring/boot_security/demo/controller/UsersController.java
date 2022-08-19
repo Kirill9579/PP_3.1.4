@@ -25,10 +25,14 @@ public class UsersController {
         this.roleRepository = roleRepository;
     }
 
-
+    @GetMapping("/")
+    public String login() {
+        return "redirect:/login";
+    }
     @GetMapping("/user/")
     public String showOneUser(Model model, Principal principal) {
         User user = userService.findByEmail(principal.getName());
+        model.addAttribute("listRole", user.getRoles());
         model.addAttribute("user", user);
         return "bootstrap/UserPage";
     }
