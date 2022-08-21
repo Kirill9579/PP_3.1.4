@@ -17,7 +17,8 @@
     <div class="container-fluid">
         <a class="navbar-brand text-white" href="#">
             <b th:text="*{authUser.getEmail()}"></b>
-            <c th:each="role : ${authUser.getRoles()}" th:text="' with roles: ' + *{role.getNameRole()}"></c>
+            <span> with roles: </span>
+            <span th:each="role : ${authUser.getRoles()}"><span th:text="*{role.getNameRole() + ' '}"></span></span>
         </a>
 
         <form class="d-flex" action="/logout">
