@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,7 +30,6 @@ public class User implements UserDetails {
 
     public User() {
     }
-
 
     @Override
     public String getUsername() {
