@@ -30,7 +30,7 @@ public class UsersController {
         return "redirect:/login";
     }
     @GetMapping("/user/")
-    public String showOneUser(Model model, Principal principal) {
+    public String getOneUser(Model model, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         model.addAttribute("listRole", user.getRoles());
         model.addAttribute("user", user);

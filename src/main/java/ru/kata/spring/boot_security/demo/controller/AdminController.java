@@ -47,7 +47,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin/")
-    public String showOneUser(ModelMap model, Principal principal) {
+    public String getAllUsers(ModelMap model, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         List<User> users = userService.getAllUsers();
         Set<Role> listRoles = new HashSet<>(roleRepository.findAll());
