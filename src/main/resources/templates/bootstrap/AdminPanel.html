@@ -129,7 +129,7 @@
                                                                     <div class="form-group">
                                                                         <label for="age-edit"><strong>Age</strong></label>
                                                                         <input type="number" class="form-control"
-                                                                               id="age-edit"
+                                                                               id="age-edit" min="0" max="100"
                                                                                th:value="${user.getAge()}"
                                                                                th:name="age">
                                                                     </div>
@@ -221,7 +221,7 @@
                                                                     <div class="form-group">
                                                                         <label for="age-delete"><strong>Age</strong></label>
                                                                         <input type="number" class="form-control"
-                                                                               id="age-delete"
+                                                                               id="age-delete" min="0" max="100"
                                                                                th:value="${user.getAge()}"
                                                                                th:name="age"
                                                                                disabled>
@@ -299,7 +299,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="age"><strong>Age</strong></label>
-                                                <input type="text" class="form-control" id="age" placeholder="Age"
+                                                <input type="number" class="form-control" id="age" placeholder="Age"
+                                                       min="0" max="100"
                                                        th:field="*{age}">
                                             </div>
                                             <div class="form-group">
