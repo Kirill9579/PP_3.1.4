@@ -1,6 +1,10 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -15,6 +19,7 @@ public class Role implements GrantedAuthority {
    private Long id;
    private String name;
    @ManyToMany(mappedBy = "roles")
+   @Fetch(FetchMode.JOIN)
    private Set<User> users = new HashSet<>();
 
    public Role() {

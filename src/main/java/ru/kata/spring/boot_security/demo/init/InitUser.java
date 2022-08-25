@@ -28,6 +28,9 @@ public class InitUser {
         Role roleAdmin = new Role();
         roleAdmin.setName("ROLE_ADMIN");
 
+        roleService.save(roleAdmin);
+        roleService.save(roleUser);
+
         User admin = new User();
         admin.setFirstName("bob");
         admin.setLastName("fury");
@@ -36,8 +39,6 @@ public class InitUser {
         admin.setEmail("admin@mail.ru");
         admin.getRoles().add(roleAdmin);
         admin.getRoles().add(roleUser);
-        roleService.save(roleAdmin);
-        roleService.save(roleUser);
         userService.addUser(admin);
 
         User user = new User();

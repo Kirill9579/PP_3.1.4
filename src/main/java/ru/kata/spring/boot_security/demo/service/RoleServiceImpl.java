@@ -17,7 +17,9 @@ public class RoleServiceImpl implements RoleService{
 
     @Override
     public void save(Role role) {
-        roleRepository.save(role);
+        if (roleRepository.findRoleByName(role.getName()) == null) {
+            roleRepository.save(role);
+        }
     }
 
     @Override

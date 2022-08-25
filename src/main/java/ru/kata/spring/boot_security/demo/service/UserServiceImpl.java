@@ -14,7 +14,9 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,8 +42,10 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+    @Transactional
     public List<User> getAllUsers() {
         return userRepository.findAll();
+
     }
 
     public User getUserById(Long id) {
