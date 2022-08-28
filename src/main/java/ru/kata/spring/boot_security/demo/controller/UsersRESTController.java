@@ -28,22 +28,8 @@ public class UsersRESTController {
         this.userService = userService;
         this.converter = converter;
     }
-
-    @GetMapping("/")
-    public String login() {
-        return "redirect:/login";
-    }
-
-
-    @GetMapping(value = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserDTO getOneUser(@PathVariable("id") Long id) {
-        User user = userService.getUserById(id);
-        UserDTO userDTO = converter.convertToUserDTO(user);
-
-        return userDTO;
-    }
     @GetMapping("/auth/")
-    UserDTO someRequestHandler(
+    public UserDTO getAuthUsers(
             @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
             User myUser = userService.findByEmail(user.getUsername());
 

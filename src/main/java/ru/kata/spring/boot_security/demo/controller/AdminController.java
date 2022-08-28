@@ -2,9 +2,7 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -44,13 +42,6 @@ public class AdminController {
 
     @GetMapping("/admin/")
     public String getAllUsers() {
-//        User user = userService.findByEmail(principal.getName());
-//        List<User> users = userService.getAllUsers();
-//        Set<Role> listRoles = new HashSet<>(roleRepository.findAll());
-//        model.addAttribute("listRoles", listRoles);
-//        model.addAttribute("newUser", new User());
-//        model.addAttribute("users", users);
-//        model.addAttribute("authUser", user);
         return "../js-view/AdminPanel";
     }
 }

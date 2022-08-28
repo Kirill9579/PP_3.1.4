@@ -1,11 +1,21 @@
 const url = 'http://localhost:8080/api/admin/';
+window.addEventListener('DOMContentLoaded', getUsers);
+getAuthUser();
 
 async function getUsers() {
+    const request = new XMLHttpRequest();
+    request.open("GET", url);
+    request.send();
+    console.log(JSON.parse(request.response));
+    
     const res = await fetch(url).then(res => res.json());
     res.forEach(user => userToHTML(user));
 };
 
-window.addEventListener('DOMContentLoaded', getUsers);
+const request = new XMLHttpRequest();
+request.open("GET", url);
+request.send();
+console.log(JSON.parse(request.response));
 
 
 function userToHTML({id, firstName, lastName, age, email, roles}){
@@ -34,7 +44,7 @@ function userToHTML({id, firstName, lastName, age, email, roles}){
             Delete
             </button>
         </td>
-    
+
     `)
 };
 
@@ -102,8 +112,7 @@ function showAuthUser({id, firstName, lastName, age, email, roles}) {
     const navbarTitle = document.getElementById('nav-bar');
     navbarTitle.insertAdjacentHTML("beforebegin",
 `
-            <h5 style="color: white"><strong>${email}</strong> with roles: ${userRole}</h5>
+        <h5 style="color: white"><strong>${email}</strong> with roles: ${userRole}</h5>
     `
     )
 };
-let promise = getAuthUser();
