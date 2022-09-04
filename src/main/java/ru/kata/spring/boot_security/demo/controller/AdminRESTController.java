@@ -33,16 +33,17 @@ public class AdminRESTController {
 
 
     @DeleteMapping("/admin/{id}")
-    public ResponseEntity<HttpStatus> removeUserById(@PathVariable("id") Long id) {
+    public ResponseEntity<UserDTO> removeUserById(@PathVariable("id") Long id) {
+        User removeUser = userService.getUserById(id);
         userService.removeUserById(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(converter.convertToUserDTO(removeUser));
     }
 
     @PatchMapping("/admin/")
-    public ResponseEntity<HttpStatus> updateUser(@RequestBody UserDTO userDTO) {
-
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
         userService.updateUser(converter.convertToUser(userDTO), userDTO.getId());
-        return ResponseEntity.ok(HttpStatus.OK);
+        User reqUser = userService.findByEmail(userDTO.getEmail());
+        return ResponseEntity.ok(converter.convertToUserDTO(reqUser));
     }
 
     @PostMapping("/admin/")
@@ -62,5 +63,11 @@ public class AdminRESTController {
         }
 
         return ResponseEntity.ok(userDTOList);
+    }
+
+    @GetMapping("/admin/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(converter.convertToUserDTO(user));
     }
 }

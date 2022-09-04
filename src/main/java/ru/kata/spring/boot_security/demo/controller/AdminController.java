@@ -20,26 +20,6 @@ public class AdminController {
         this.roleRepository = roleRepository;
     }
 
-
-
-    @DeleteMapping("/admin/delete/{id}")
-    public String removeUserById(@PathVariable("id") Long id) {
-        userService.removeUserById(id);
-        return "redirect:/admin/";
-    }
-
-    @PatchMapping("/admin/update/{id}")
-    public String updateUser(@ModelAttribute("newUser") User user, @PathVariable("id") Long id) {
-        userService.updateUser(user, id);
-        return "redirect:/admin/";
-    }
-
-    @PostMapping("/admin/new")
-    public String saveNewUser(@ModelAttribute("user") User user) {
-        userService.addUser(user);
-        return "redirect:/admin/";
-    }
-
     @GetMapping("/admin/")
     public String getAllUsers() {
         return "../js-view/AdminPanel";

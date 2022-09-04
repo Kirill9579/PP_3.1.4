@@ -25,7 +25,7 @@ public class UsersController {
         return "redirect:/login";
     }
     @GetMapping("/user/")
-    public String getOneUser(Model model, Principal principal) {
-        return "../js-view/UserPanel";
+    public String getOneUser() {
+        return "../js-view/AdminPanel";
     }
 }

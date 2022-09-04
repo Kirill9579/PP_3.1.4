@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="EN">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -25,16 +25,16 @@
 <div class="d-flex" style="height: 100vh">
 
     <div class="nav flex-column nav-pills col-2 mt-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-        <a class="nav-link active" id="admin-tab" data-toggle="pill" href="#admin-panel" role="tab"
-           aria-controls="v-pills-home" aria-selected="true">Admin</a>
-        <a class="nav-link" id="user-tab" data-toggle="pill" href="#user-view" role="tab"
-           aria-controls="v-pills-profile" aria-selected="false">User</a>
+        <a class="nav-link active" id="admin-tab" data-toggle="pill" href="#admin-panel"
+           sec:authorize="hasAnyRole('ROLE_ADMIN')" role="tab" aria-controls="v-pills-home" aria-selected="true">Admin</a>
+        <a class="nav-link" id="user-tab" data-toggle="pill" href="#user-view"
+           role="tab" aria-controls="v-pills-profile" aria-selected="false">User</a>
     </div>
     <div class="container-fluid bg-light">
         <div class="tab-content mt-3">
             <!--            page admin-->
             <div class="tab-pane fade show active container-fluid" id="admin-panel" role="tabpanel"
-                 aria-labelledby="admin-panel-tab">
+                 aria-labelledby="admin-panel-tab" sec:authorize="hasAnyRole('ROLE_ADMIN')">
                 <div class="h1">Admin panel</div>
                 <!--            buttons user table / new user-->
                 <nav>
@@ -71,8 +71,8 @@
                                     <tbody>
                                     <tr id="listUsers">
 
-                                        <!-- Modal edit-->
-                                        <div class="modal fade" id="edit_user" tabindex="-1" role="dialog"
+ <!------------------------------- Modal edit------------------------------>
+                                        <div class="modal fade" id="edit-user" tabindex="-1" role="dialog"
                                              aria-labelledby="modalEdit"
                                              aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -116,10 +116,10 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label><strong>Role</strong></label>
-                                                                <select class="custom-select" size="2"
-                                                                        name="roles">
-                                                                    <option>
-                                                                    </option>
+                                                                <select class="custom-select" size="2" name="roles"
+                                                                        id="edit-roles">
+                                                                    <option value="ADMIN">ADMIN</option>
+                                                                    <option value="USER">USER</option>
                                                                 </select>
                                                             </div>
                                                         </form>
@@ -129,7 +129,7 @@
                                                                 data-dismiss="modal">
                                                             Close
                                                         </button>
-                                                        <button type="submit" class="btn btn-primary">
+                                                        <button type="submit" class="btn btn-primary" id="edit-button">
                                                             Edit
                                                         </button>
                                                     </div>
@@ -137,8 +137,9 @@
                                             </div>
                                         </div>
 
-                                        <!--                     Modal delete-->
-                                        <div class="modal fade" id="delete_user" tabindex="-1" role="dialog"
+
+<!----------------------------------------- Modal delete-->
+                                        <div class="modal fade" id="delete-user" tabindex="-1" role="dialog"
                                              aria-labelledby="modalDelete"
                                              aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -175,13 +176,12 @@
                                                                 <input type="email" class="form-control"
                                                                        id="email-delete" disabled>
                                                             </div>
-
                                                             <div class="form-group">
                                                                 <label><strong>Role</strong></label>
                                                                 <select class="custom-select" size="2"
-                                                                        name="roles">
-                                                                    <option disabled>
-                                                                    </option>
+                                                                        name="roles" disabled>
+                                                                    <option value="ADMIN">ADMIN</option>
+                                                                    <option value="USER">USER</option>
                                                                 </select>
                                                             </div>
                                                         </form>
@@ -191,14 +191,13 @@
                                                                 data-dismiss="modal">
                                                             Close
                                                         </button>
-                                                        <button type="submit" class="btn btn-danger">
+                                                        <button type="submit" class="btn btn-danger" id="delete-user-btn">
                                                             Delete
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </tr>
                                     </tbody>
                                 </table>
@@ -207,7 +206,7 @@
                         </div>
 
                     </div>
-                    <!--                target new user-->
+<!------------------------------ target new user---------------------------->
                     <div class="tab-pane fade" id="new-user" aria-labelledby="nav-profile-tab">
                         <div class="card">
                             <h5 class="card-header">Add new User</h5>
@@ -258,7 +257,7 @@
                     </div>
                 </div>
             </div>
-            <!--            page user-->
+<!------------------------------------page user------------------------------------------------------------>
             <div class="tab-pane fade container-fluid" id="user-view" role="tabpanel"
                  aria-labelledby="user-panel-tab">
                 <div class="h1">User information-page</div>
@@ -294,13 +293,11 @@
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-<script th:src="@{/test.js}"></script>
+<script th:src="@{/admin_script.js}" src="../static/admin_script.js"></script>
 
 </body>
 </html>
