@@ -32,11 +32,11 @@
     </div>
     <div class="container-fluid bg-light">
         <div class="tab-content mt-3">
-            <!--            page admin-->
+<!---------------------------page admin for ROLE_ADMIN----------------------------------->
             <div class="tab-pane fade show active container-fluid" id="admin-panel" role="tabpanel"
                  aria-labelledby="admin-panel-tab" sec:authorize="hasAnyRole('ROLE_ADMIN')">
                 <div class="h1">Admin panel</div>
-                <!--            buttons user table / new user-->
+<!-------------------------------buttons user table / new user-------------------------->
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#users-table"
@@ -48,7 +48,7 @@
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
-                    <!--                target user table-->
+<!-------------------------------target user table-------------------->
                     <div class="tab-pane fade show active" id="users-table" role="tabpanel"
                          aria-labelledby="nav-home-tab">
                         <div class="card">
@@ -138,7 +138,7 @@
                                         </div>
 
 
-<!----------------------------------------- Modal delete-->
+<!----------------------------------------- Modal delete----------------------------------->
                                         <div class="modal fade" id="delete-user" tabindex="-1" role="dialog"
                                              aria-labelledby="modalDelete"
                                              aria-hidden="true">
@@ -257,7 +257,7 @@
                     </div>
                 </div>
             </div>
-<!------------------------------------page user------------------------------------------------------------>
+<!------------------------------------page user for ROLE_USER      ------------------------------------------------------------>
             <div class="tab-pane fade container-fluid" id="user-view" role="tabpanel"
                  aria-labelledby="user-panel-tab">
                 <div class="h1">User information-page</div>

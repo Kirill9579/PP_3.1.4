@@ -2,62 +2,67 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.repository.cdi.Eager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.dto.Converter;
+import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Converter converter;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder, Converter converter) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.converter = converter;
     }
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return converter.convertToUserDTO(user);
     }
 
     @Transactional
-    public void addUser(User user) {
+    public UserDTO addUser(UserDTO user) {
 
-        if (findByEmail(user.getEmail()) == null) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(user.getRoles());
-            userRepository.save(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(user.getRoles());
+        userRepository.save(converter.convertToUser(user));
+        return user;
+    }
+    @Transactional
+    public List<UserDTO> getAllUsers() {
+        List<UserDTO> allUsers = new ArrayList<>();
+        for (User user : userRepository.findAll()) {
+            allUsers.add(converter.convertToUserDTO(user));
         }
+        return allUsers;
+    }
 
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id).stream().findFirst().orElse(null);
+        return converter.convertToUserDTO(user);
     }
     @Transactional
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-
-    }
-
-    public User getUserById(Long id) {
-        return userRepository.findById(id).stream().findFirst().orElse(null);
-    }
-    @Transactional
-    public void removeUserById(Long id) {
+    public UserDTO removeUserById(Long id) {
+        UserDTO user = getUserById(id);
         userRepository.deleteById(id);
+        return user;
     }
     @Transactional
-    public void updateUser(User user, Long id) {
-        User userDB = getUserById(id);
+    public UserDTO updateUser(UserDTO user, Long id) {
+        UserDTO userDB = getUserById(id);
         userDB.setRoles(user.getRoles());
         userDB.setFirstName(user.getFirstName());
         userDB.setLastName(user.getLastName());
@@ -66,7 +71,8 @@ public class UserServiceImpl implements UserService {
         if (!userDB.getPassword().contains(user.getPassword())) {
             userDB.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        userRepository.save(userDB);
+        userRepository.save(converter.convertToUser(userDB));
+        return userDB;
     }
 
 

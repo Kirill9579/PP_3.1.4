@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.init;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.kata.spring.boot_security.demo.dto.Converter;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
@@ -11,13 +12,15 @@ import javax.annotation.PostConstruct;
 
 @Component
 public class InitUser {
-    private UserService userService;
+    private final UserService userService;
     private final RoleService roleService;
+    private final Converter converter;
 
     @Autowired
-    public InitUser(UserService userService, RoleService roleService) {
+    public InitUser(UserService userService, RoleService roleService, Converter converter) {
         this.userService = userService;
         this.roleService = roleService;
+        this.converter = converter;
     }
     @PostConstruct
     private void createAdminAndUser() {
@@ -28,8 +31,8 @@ public class InitUser {
         Role roleAdmin = new Role();
         roleAdmin.setName("ROLE_ADMIN");
 
-        roleService.save(roleAdmin);
-        roleService.save(roleUser);
+        roleService.saveRole(roleAdmin);
+        roleService.saveRole(roleUser);
 
         User admin = new User();
         admin.setFirstName("bob");
@@ -39,7 +42,7 @@ public class InitUser {
         admin.setEmail("admin@mail.ru");
         admin.getRoles().add(roleAdmin);
         admin.getRoles().add(roleUser);
-        userService.addUser(admin);
+        userService.addUser(converter.convertToUserDTO(admin));
 
         User user = new User();
         user.setFirstName("James");
@@ -48,6 +51,6 @@ public class InitUser {
         user.setPassword("user");
         user.setEmail("user@mail.ru");
         user.getRoles().add(roleUser);
-        userService.addUser(user);
+        userService.addUser(converter.convertToUserDTO(user));
     }
 }

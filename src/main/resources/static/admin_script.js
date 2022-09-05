@@ -136,9 +136,10 @@ async function getAuthUser() {
     function showAuthUser({id, firstName, lastName, age, email, roles}) {
         const authUser = document.getElementById('auth_user');
         let userRole = '';
-        roles.forEach((role) => {
+        for(let role of roles) {
             userRole = userRole + role.name.substring(5) + " "
-        });
+        }
+        
         if (userRole.indexOf('ADMIN') == -1) {
             $('#admin-tab').toggleClass('active');
             $('#user-tab').toggleClass('active');
