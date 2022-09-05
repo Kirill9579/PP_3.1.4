@@ -36,12 +36,7 @@ const userToHTML = ({id, firstName, lastName, age, email, roles}) => {
     const usersList = document.getElementById('listUsers');
     let userRole = '';
     roles.forEach((role) => {
-        if (role.name == null) {
-            userRole = "empty";
-        } else {
             userRole = userRole + role.name.substring(5) + " ";   
-        }
-        
     });
     usersList.insertAdjacentHTML("beforebegin", `
                                                 
@@ -110,8 +105,10 @@ $('#button_add_user').click(async () => {
         }, 
         body: JSON.stringify(user)
     })
-    .then(res => res.json())
-    .then(() => location.reload());
+    .then(res => { 
+        userToHTML(res.json());
+        location.reload();
+    });
 });
 
 function getRoles(list) {
