@@ -40,8 +40,8 @@ public class InitUser {
         admin.setAge(52);
         admin.setPassword("admin");
         admin.setEmail("admin@mail.ru");
-        admin.getRoles().add(roleAdmin);
-        admin.getRoles().add(roleUser);
+        addRoleUser(admin, roleAdmin);
+        addRoleUser(admin, roleUser);
         userService.addUser(converter.convertToUserDTO(admin));
 
         User user = new User();
@@ -50,7 +50,47 @@ public class InitUser {
         user.setAge(78);
         user.setPassword("user");
         user.setEmail("user@mail.ru");
-        user.getRoles().add(roleUser);
+        addRoleUser(user, roleUser);
         userService.addUser(converter.convertToUserDTO(user));
+
+        User user2 = new User();
+        user2.setFirstName("spanch");
+        user2.setLastName("bob");
+        user2.setAge(15);
+        user2.setPassword("bob");
+        user2.setEmail("bob@mail.ru");
+        addRoleUser(user2, roleUser);
+        userService.addUser(converter.convertToUserDTO(user2));
+
+        User user3 = new User();
+        user3.setFirstName("patric");
+        user3.setLastName("zvezda");
+        user3.setAge(16);
+        user3.setPassword("patric");
+        user3.setEmail("patric@mail.ru");
+        addRoleUser(user3, roleUser);
+        userService.addUser(converter.convertToUserDTO(user3));
+
+        User user4 = new User();
+        user4.setFirstName("tom");
+        user4.setLastName("cat");
+        user4.setAge(29);
+        user4.setPassword("tom");
+        user4.setEmail("tom@mail.ru");
+        addRoleUser(user4, roleUser);
+        userService.addUser(converter.convertToUserDTO(user4));
+
+        User user5 = new User();
+        user5.setFirstName("jerry");
+        user5.setLastName("mouse");
+        user5.setAge(6);
+        user5.setPassword("jerry");
+        user5.setEmail("jerry@mail.ru");
+        addRoleUser(user5, roleUser);
+        userService.addUser(converter.convertToUserDTO(user5));
+    }
+
+    void addRoleUser(User user, Role role) {
+        user.getRoles().add(role);
     }
 }

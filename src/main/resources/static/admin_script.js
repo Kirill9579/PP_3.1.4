@@ -1,93 +1,127 @@
 const url = 'http://localhost:8080/api/admin/';
+const usersList = document.getElementById('listUsers');
+
 window.addEventListener('DOMContentLoaded', getUsers);
 getAuthUser();
 
-// Выводит таблицу всех юзеров
+// Запрос на сервер всех пользователй
 async function getUsers() {
     await fetch(url)
         .then(res => res.json())
-        .then(data => data.forEach(user => userToHTML(user)));
-
-    const on = (element, event, selector, handler) => {
-        element.addEventListener(event, e => {
-            if (e.target.closest(selector)) {
-                handler(e);
-            };
-        });
-    };
-    
-    on(document, 'click', '#btn-edit', e => {
-        const fila = e.target.parentNode.parentNode;
-        const id =fila.firstElementChild.innerHTML;
-        console.log(id);
-        modalEdit(id);
-    });
-    
-    on(document, 'click', '#btn-delete', e => {
-        const fila = e.target.parentNode.parentNode;
-        const id = fila.firstElementChild.innerHTML;
-        console.log(id);
-        deleteUser(id);
-    });
-    
+        .then(data => userToHTML(data));
 };
 
-const userToHTML = ({id, firstName, lastName, age, email, roles}) => {
-    const usersList = document.getElementById('listUsers');
-    let userRole = '';
-    roles.forEach((role) => {
+// Вывод таблицы всех пользователей
+function userToHTML(users) {
+    
+    users.forEach((user) => {
+        let userRole = '';
+        user.roles.forEach((role) => {
             userRole = userRole + role.name.substring(5) + " ";   
-    });
-    usersList.insertAdjacentHTML("beforebegin", `
-                                                
-                    <td>${id}</td>
-                    <td>${firstName}</td>
-                    <td>${lastName}</td>
-                    <td>${age}</td>
-                    <td>${email}</td>
+        });
+        let table = `
+                <tr>                                
+                    <td>${user.id}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.age}</td>
+                    <td>${user.email}</td>
                     <td>${userRole}</td>
                     <td><button type="button" class="btn btn-info" data-toggle="modal"
-                        href="#edit-user" id="btn-edit">Edit</button>
+                        href="#edit-user" id="btn-edit" onclick="modalEdit('${user.id}')">Edit</button>
                     </td>
                     <td>
                         <button type="button" class="btn btn-danger" data-toggle="modal"
-                        href="#delete-user" id="btn-delete">Delete</button>
+                        href="#delete-user" id="btn-delete" onclick="deleteUser(${user.id})">Delete</button>
                     </td>
-                `
-    );
+                </tr>
+                `;
+        usersList.innerHTML += table;
+    });
+
+    //заполнение ролей
+    fetch('http://localhost:8080/api/roles/')
+        .then(res => res.json())
+        .then(data => {
+            let listOptionRoles = '';
+            data.forEach(role => {
+                listOptionRoles += '<option value="' + role.id + '">' + role.name.substring(5) + '</option>';
+            });
+            document.querySelector('#role_new_user').innerHTML = listOptionRoles;
+            $('#role_new_user option[value="2"]').prop('selected', true)
+            document.querySelector('#modal-delete-role').innerHTML = listOptionRoles;
+            document.querySelector('#edit-roles').innerHTML = listOptionRoles;
+        });
+    
 };
+
 
 // Модальное окно удаления
 function deleteUser(id){
-    $.ajax({
-        url: `http://localhost:8080/api/admin/${id}`,
-        dataType: 'json'
-    }).done(function (data) {
-        
-    document.querySelector('#firstname-delete').value = data.firstName;
-    document.querySelector('#lastname-delete').value = data.lastName;
-    document.querySelector('#age-delete').value = data.age;
-    document.querySelector('#email-delete').value = data.email;
-    });
 
-    $('#delete-user-btn').click(async () => {
-        await fetch(`http://localhost:8080/api/admin/${id}`, {
-            method: 'DELETE'
-        })
+    let user_id = document.querySelector('#user-id-delete');
+    let firstName = document.querySelector('#firstname-delete');
+    let lastName = document.querySelector('#lastname-delete');
+    let age = document.querySelector('#age-delete');
+    let email = document.querySelector('#email-delete');
+
+    user_id.value = '';
+    firstName.value = '';
+    lastName.value = '';
+    age.value = '';
+    email.value = '';
+    fetch(`http://localhost:8080/api/admin/${id}`)
         .then(res => res.json())
-        .then(() => location.reload());
-    });
+        .then(data => {
+
+            user_id.value = data.id;
+            firstName.value = data.firstName;
+            lastName.value = data.lastName;
+            age.value = data.age;
+            email.value = data.email;
+        });
+    
 };
 
-// Окно нового пользователя
-$('#button_add_user').click(async () => {
+// Отправка формы удаления
+document.getElementById('delete-user-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    let id = document.querySelector('#user-id-delete').value;
     
+    fetch(`http://localhost:8080/api/admin/${id}`, {
+        method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(() => {
+        document.getElementById('modal-delete-close').click();
+        console.log(id);
+        usersList.innerHTML = '';
+        getUsers();
+    });
+});
+
+// Окно нового пользователя
+$('#button_add_user').click(async (e) => {
+    e.preventDefault();
+
+    let roles = []
+    const values = $('#role_new_user').val()
+    const text = $('#role_new_user option:selected').toArray().map(item => item.text)
+
+    for (let i = 0; i < values.length; i++) {
+        roles.push({
+            id: values[i],
+            name: 'ROLE_' + text[i]
+        })
+    }
+
+
     let firstName = document.querySelector('#firstname').value;
     let lastName = document.querySelector('#lastname').value;
     let age = document.querySelector('#age').value;
     let email = document.querySelector('#email').value;
     let password = document.querySelector('#password').value;
-    let roles = getRoles(Array.from(document.getElementById('role_new_user').selectedOptions).map(r => r.value));
+    
 
     const user = {
         "firstName": firstName,
@@ -105,23 +139,15 @@ $('#button_add_user').click(async () => {
         }, 
         body: JSON.stringify(user)
     })
-    .then(res => { 
-        userToHTML(res.json());
-        location.reload();
+    .then(res => res.json())
+    .then(() => {
+        document.getElementById('nav-home-tab').click();
+        usersList.innerHTML = '';
+        getUsers();
+        const values = document.querySelector('#new_user').querySelectorAll('input').values();
+        for (let val of values) {val.value = ''};
     });
 });
-
-function getRoles(list) {
-    let roles = [];
-    if (list.indexOf("USER") >= 0) {
-        roles.push({"id": 2, "name": 'ROLE_USER'});
-    }
-    if (list.indexOf("ADMIN") >= 0) {
-        roles.push({"id": 1, "name": 'ROLE_ADMIN'});
-    }
-    return roles;
-}
-
 
 // Текущий пользователь
 async function getAuthUser() {
@@ -161,48 +187,87 @@ async function getAuthUser() {
         );
     };
 }
-// Модальное окно изменения пользователя
-function modalEdit(user_id){
-    $.ajax({
-        url: `http://localhost:8080/api/admin/${user_id}`,
-        dataType: 'json'
-    }).done(function (data) {
-            console.log(data);
+
+// Модальное окно редактирования пользователя
+function modalEdit(user_id) {
+    
+    let id = document.querySelector('#user-id-edit');
+    let firstName = document.querySelector('#firstname-edit');
+    let lastName = document.querySelector('#lastname-edit');
+    let age = document.querySelector('#age-edit');
+    let email = document.querySelector('#email-edit');
+    let password = document.querySelector('#password-edit');
+
+    fetch(`http://localhost:8080/api/admin/${user_id}`)
+        .then(res => res.json())
+        .then(data => {
             
-            let firstName = document.querySelector('#firstname-edit');
+            id.value = data.id;
             firstName.value = data.firstName;
-            let lastName = document.querySelector('#lastname-edit');
             lastName.value = data.lastName;
-            let age = document.querySelector('#age-edit');
             age.value = data.age;
-            let email = document.querySelector('#email-edit');
             email.value = data.email;
-            let password = document.querySelector('#password-edit');
             password.value = data.password;
-            
-        
-        $('#edit-button').click(async function(){
-            let id = data.id;
-            firstName = firstName.value;
-            lastName = lastName.value;
-            age = age.value;
-            email = email.value;
-            password = password.value;
-            let roles = getRoles(Array.from(document.getElementById('edit-roles').selectedOptions).map(r => r.value));
 
-            const user = {id, firstName, lastName, age, email, password, roles};
-            console.log(roles);
-            console.log(user);
-
-            const updateUser = await fetch('http://localhost:8080/api/admin/', {
-                method: 'PATCH', 
-                headers: {
-                    'Content-Type': 'application/json'
-                }, 
-                body: JSON.stringify(user)
-            })
-            .then(res => res.json())
-            .then(() => location.reload());
-        });
+            if (data.roles[0].name === 'ROLE_ADMIN') {
+                $('#edit-roles option[value="1"]').prop('selected', true)
+            }
+            if (data.roles[0].name === 'ROLE_USER') {
+                $('#edit-roles option[value="2"]').prop('selected', true)
+            }
+            if (data.roles.length > 1) {
+                $('#edit-roles option').prop('selected', true)
+            }
     });
+    $('#edit-user').on('hidden.bs.modal', () => {
+        $('#edit-roles option').prop('selected', false);
+    });    
 };
+
+// Отправка формы редактирования
+document.querySelector('#edit-button').addEventListener('click', (e) => {
+    e.preventDefault();
+    let roles = [];
+
+    const values = $('#edit-roles').val()
+    const text = $('#edit-roles option:selected').toArray().map(item => item.text)
+
+    for (let i = 0; i < values.length; i++) {
+        roles.push({
+            id: values[i],
+            name: 'ROLE_' + text[i]
+        });
+    };
+    let id = document.querySelector('#user-id-edit').value;
+    let firstName = document.querySelector('#firstname-edit').value;
+    let lastName = document.querySelector('#lastname-edit').value;
+    let age = document.querySelector('#age-edit').value;
+    let email = document.querySelector('#email-edit').value;
+    let password = document.querySelector('#password-edit').value;
+
+    const user = {
+        "id" : id,
+        "firstName" : firstName,
+        "lastName" : lastName,
+        "age" : age, 
+        "email" : email, 
+        "password" : password, 
+        "roles" : roles
+    };
+    
+
+    fetch('http://localhost:8080/api/admin/', {
+            method: 'PATCH', 
+            headers: {
+                'Content-Type': 'application/json'
+            }, 
+            body: JSON.stringify(user)
+        })
+        .then(res => res.json())
+        .then((data) => {
+            console.log(data.id);
+            document.getElementById('modal-edit-close').click();
+            usersList.innerHTML = '';
+            getUsers();
+        });
+});

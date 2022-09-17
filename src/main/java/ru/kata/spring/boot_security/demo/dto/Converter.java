@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.dto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 @Component
 public class Converter {
@@ -18,5 +19,8 @@ public class Converter {
     }
     public UserDTO convertToUserDTO(User user) {
         return modelMapper.map(user, UserDTO.class);
+    }
+    public RoleDTO convertToRoleDTO(Role role) {
+        return modelMapper.map(role, RoleDTO.class);
     }
 }

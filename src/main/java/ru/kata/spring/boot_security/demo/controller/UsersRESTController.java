@@ -19,7 +19,7 @@ public class UsersRESTController {
         this.userService = userService;
     }
     @GetMapping("/user/")
-    public String getOneUser() {
+    public String getUserPage() {
         return "../js-view/AdminPanel";
     }
 
