@@ -19,9 +19,9 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final Converter converter;
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+    private Converter converter;
     @Autowired
     public UserServiceImpl(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder, Converter converter) {
         this.userRepository = userRepository;

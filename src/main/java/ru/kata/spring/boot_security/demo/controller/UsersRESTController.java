@@ -12,7 +12,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 @Controller
 public class UsersRESTController {
 
-    private final UserService userService;
+    private UserService userService;
 
     @Autowired
     public UsersRESTController(UserService userService, Converter converter) {

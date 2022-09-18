@@ -16,8 +16,8 @@ import java.util.List;
 @Controller
 public class AdminRESTController {
 
-    private final UserService userService;
-    private final RoleService roleService;
+    private UserService userService;
+    private RoleService roleService;
 
     @Autowired
     public AdminRESTController(UserService userService, Converter converter, RoleService roleService) {

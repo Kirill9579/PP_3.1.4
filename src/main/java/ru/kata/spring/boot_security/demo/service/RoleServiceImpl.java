@@ -13,8 +13,8 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements RoleService{
 
-    private final RoleRepository roleRepository;
-    private final Converter converter;
+    private RoleRepository roleRepository;
+    private Converter converter;
 
     @Autowired
     public RoleServiceImpl(RoleRepository roleRepository, Converter converter) {
